@@ -5,18 +5,17 @@ import (
 
 	"github.com/gotk3/gotk3/gtk"
 
-	"github.com/hultan/draw/internal/draw"
+	"github.com/hultan/draw/internal/drawer"
 	"github.com/hultan/softteam/framework"
 )
 
-const applicationTitle = "draw"
+const applicationTitle = "drawer"
 const applicationVersion = "v 0.01"
 const applicationCopyRight = "©SoftTeam AB, 2020"
 
 type MainForm struct {
-	Window      *gtk.ApplicationWindow
-	builder     *framework.GtkBuilder
-	AboutDialog *gtk.AboutDialog
+	Window  *gtk.ApplicationWindow
+	builder *framework.GtkBuilder
 }
 
 // NewMainForm : Creates a new MainForm object
@@ -43,31 +42,51 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 
 	// Set up main window
 	m.Window.SetApplication(app)
-	m.Window.SetTitle("draw-ui main window")
+	m.Window.SetTitle("drawer-ui main window")
 
 	// Hook up the destroy event
 	m.Window.Connect("destroy", m.Window.Close)
-
-	// Quit button
-	button := m.builder.GetObject("main_window_quit_button").(*gtk.ToolButton)
-	button.Connect("clicked", m.Window.Close)
-
-	// Status bar
-	statusBar := m.builder.GetObject("main_window_status_bar").(*gtk.Statusbar)
-	statusBar.Push(statusBar.GetContextId("draw-ui"), "draw-ui : version 0.1.0")
-
-	// Menu
-	m.setupMenu(fw)
 
 	// Show the main window
 	m.Window.ShowAll()
 
 	da := m.builder.GetObject("drawingArea").(*gtk.DrawingArea)
-	draw := draw.NewDraw(da)
-	draw.Setup()
+	da.SetSizeRequest(600, 600)
+	d := drawer.NewDrawer(m.Window, da, setup, draw)
+	d.Init()
 }
 
-func (m *MainForm) setupMenu(fw *framework.Framework) {
-	menuQuit := m.builder.GetObject("menu_file_quit").(*gtk.MenuItem)
-	menuQuit.Connect("activate", m.Window.Close)
+var x = 0.0
+var y = 0.0
+var dim = 80.0
+
+func setup(d *drawer.Drawer) {
+	d.CreateCanvas(720, 400)
+}
+
+func draw(d *drawer.Drawer) {
+	// d.Background(102)
+	// // Animate by increasing our x value
+	// x = x + 0.8
+	// // If the shape goes off the canvas, reset the position
+	// if x > d.Width()+dim {
+	// 	x = -dim
+	// }
+	//
+	// // Even though our rect command draws the shape with its
+	// // center at the origin, translate moves it to the new
+	// // x and y position
+	// d.Translate(x, d.Height()/2-dim/2)
+	// d.Fill(255)
+	// d.Rect(-dim/2, -dim/2, dim, dim)
+	//
+	// // Transforms accumulate. Notice how this rect moves
+	// // twice as fast as the other, but it has the same
+	// // parameter for the x-axis value
+	// d.Translate(x, dim)
+	// d.Fill(0)
+	// d.Rect(-dim/2, -dim/2, dim, dim)
+
+	d.Translate(100, 100)
+	d.Rect(50, 50, 200, 200)
 }

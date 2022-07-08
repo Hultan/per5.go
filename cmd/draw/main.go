@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ApplicationId    = "se.softteam.draw"
+	ApplicationId    = "se.softteam.drawer"
 	ApplicationFlags = glib.APPLICATION_FLAGS_NONE
 )
 
