@@ -1,7 +1,6 @@
-package drawer
+package per5
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -9,16 +8,17 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
-type Drawer struct {
+type Per5 struct {
 	win                    *gtk.ApplicationWindow
 	da                     *gtk.DrawingArea
 	ctx                    *cairo.Context
-	setupFunc              func(*Drawer)
-	drawFunc               func(*Drawer)
+	setupFunc              func(*Per5)
+	drawFunc               func(*Per5)
 	width, height          float64
 	mode                   drawMode
 	translateX, translateY float64
 	ticker                 ticker
+	mouseX, mouseY         int
 }
 
 type ticker struct {
@@ -26,9 +26,8 @@ type ticker struct {
 	ticker     *time.Ticker
 }
 
-func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Drawer), draw func(*Drawer)) *Drawer {
-
-	d := &Drawer{
+func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Per5), draw func(*Per5)) *Per5 {
+	d := &Per5{
 		win:       win,
 		da:        da,
 		setupFunc: setup,
@@ -37,21 +36,25 @@ func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Draw
 	return d
 }
 
-func (d *Drawer) Init() {
-	d.width, d.height = float64(d.da.GetAllocatedWidth()), float64(d.da.GetAllocatedHeight())
+func (d *Per5) Init() {
+	// Events (signals)
 	d.da.Connect("draw", d.onDraw)
 	d.win.AddEvents(int(gdk.POINTER_MOTION_MASK))
 	d.win.Connect("motion-notify-event", d.onMotionNotifyEvent)
 
+	// Fields
+	d.width, d.height = float64(d.da.GetAllocatedWidth()), float64(d.da.GetAllocatedHeight())
+
+	// Ticker
 	d.ticker.ticker = time.NewTicker(20 * time.Millisecond)
 	d.ticker.tickerQuit = make(chan struct{})
 
+	// Startup per5.go
 	d.setupFunc(d)
-
 	go d.mainLoop()
 }
 
-func (d *Drawer) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
+func (d *Per5) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
 	if d.ctx == nil {
 		d.ctx = ctx
 	}
@@ -59,7 +62,18 @@ func (d *Drawer) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
 	d.drawFunc(d)
 }
 
-func (d *Drawer) mainLoop() {
+func (d *Per5) onMotionNotifyEvent(da *gtk.ApplicationWindow, e *gdk.Event) {
+	me := gdk.EventMotionNewFromEvent(e)
+
+	x, y := me.MotionVal()
+	xx, yy, err := d.win.TranslateCoordinates(d.da, int(x), int(y))
+	if err != nil {
+		panic(err)
+	}
+	d.mouseX, d.mouseY = xx, yy
+}
+
+func (d *Per5) mainLoop() {
 	for {
 		select {
 		case <-d.ticker.ticker.C:
@@ -69,15 +83,4 @@ func (d *Drawer) mainLoop() {
 			return
 		}
 	}
-}
-
-func (d *Drawer) onMotionNotifyEvent(da *gtk.ApplicationWindow, e *gdk.Event) {
-	me := gdk.EventMotionNewFromEvent(e)
-
-	x, y := me.MotionVal()
-	xx, yy, err := d.win.TranslateCoordinates(d.da, int(x), int(y))
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(xx, ",", yy)
 }

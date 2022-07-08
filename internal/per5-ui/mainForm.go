@@ -5,7 +5,7 @@ import (
 
 	"github.com/gotk3/gotk3/gtk"
 
-	"github.com/hultan/draw/internal/drawer"
+	"github.com/hultan/draw/internal/per5"
 	"github.com/hultan/softteam/framework"
 )
 
@@ -52,7 +52,7 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 
 	da := m.builder.GetObject("drawingArea").(*gtk.DrawingArea)
 	da.SetSizeRequest(600, 600)
-	d := drawer.NewDrawer(m.Window, da, setup, draw)
+	d := per5.NewDrawer(m.Window, da, setup, draw)
 	d.Init()
 }
 
@@ -60,11 +60,11 @@ var x = 0.0
 var y = 0.0
 var dim = 80.0
 
-func setup(d *drawer.Drawer) {
+func setup(d *per5.Per5) {
 	d.CreateCanvas(720, 400)
 }
 
-func draw(d *drawer.Drawer) {
+func draw(d *per5.Per5) {
 	// d.Background(102)
 	// // Animate by increasing our x value
 	// x = x + 0.8

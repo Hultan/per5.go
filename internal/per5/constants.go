@@ -1,4 +1,4 @@
-package drawer
+package per5
 
 import (
 	"image/color"

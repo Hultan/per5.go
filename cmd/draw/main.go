@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/hultan/draw/internal/draw-ui"
+	"github.com/hultan/draw/internal/per5-ui"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
