@@ -1,4 +1,4 @@
-module github.com/hultan/draw
+module github.com/hultan/per5
 
 go 1.18
 

@@ -1,15 +1,16 @@
 package draw_ui
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/gotk3/gotk3/gtk"
 
-	"github.com/hultan/draw/internal/per5"
+	"github.com/hultan/per5/internal/per5"
 	"github.com/hultan/softteam/framework"
 )
 
-const applicationTitle = "drawer"
+const applicationTitle = "per5.go"
 const applicationVersion = "v 0.01"
 const applicationCopyRight = "©SoftTeam AB, 2020"
 
@@ -42,7 +43,7 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 
 	// Set up main window
 	m.Window.SetApplication(app)
-	m.Window.SetTitle("drawer-ui main window")
+	m.Window.SetTitle("per5.go main window")
 
 	// Hook up the destroy event
 	m.Window.Connect("destroy", m.Window.Close)
@@ -89,4 +90,5 @@ func draw(d *per5.Per5) {
 
 	d.Translate(100, 100)
 	d.Rect(50, 50, 200, 200)
+	fmt.Println("Drawing!")
 }
