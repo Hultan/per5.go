@@ -43,7 +43,8 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 
 	// Set up main window
 	m.Window.SetApplication(app)
-	m.Window.SetTitle("per5.go main window")
+	title := fmt.Sprintf("%s %s - %s", applicationTitle, applicationVersion, applicationCopyRight)
+	m.Window.SetTitle(title)
 
 	// Hook up the destroy event
 	m.Window.Connect("destroy", m.Window.Close)
@@ -57,9 +58,9 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	d.Init()
 }
 
-var x = 0.0
-var y = 0.0
-var dim = 80.0
+// var x = 0.0
+// var y = 0.0
+// var dim = 80.0
 
 func setup(d *per5.Per5) {
 	d.CreateCanvas(720, 400)
