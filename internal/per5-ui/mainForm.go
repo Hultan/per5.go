@@ -6,6 +6,7 @@ import (
 
 	"github.com/gotk3/gotk3/gtk"
 
+	"github.com/hultan/per5/internal/codingChallenge"
 	"github.com/hultan/per5/internal/per5"
 	"github.com/hultan/softteam/framework"
 )
@@ -13,6 +14,8 @@ import (
 const applicationTitle = "per5.go"
 const applicationVersion = "v 0.01"
 const applicationCopyRight = "©SoftTeam AB, 2020"
+
+var cc *codingChallenge.ChallengeManager
 
 type MainForm struct {
 	Window  *gtk.ApplicationWindow
@@ -54,42 +57,18 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 
 	da := m.builder.GetObject("drawingArea").(*gtk.DrawingArea)
 	da.SetSizeRequest(600, 600)
+
+	cc = codingChallenge.NewChallengeManager()
+	cc.SetCurrentChallenge(1)
+
 	d := per5.NewDrawer(m.Window, da, setup, draw)
 	d.Init()
 }
 
-// var x = 0.0
-// var y = 0.0
-// var dim = 80.0
-
-func setup(d *per5.Per5) {
-	d.CreateCanvas(720, 400)
+func setup(p *per5.Per5) {
+	cc.Setup(p)
 }
 
-func draw(d *per5.Per5) {
-	// d.Background(102)
-	// // Animate by increasing our x value
-	// x = x + 0.8
-	// // If the shape goes off the canvas, reset the position
-	// if x > d.Width()+dim {
-	// 	x = -dim
-	// }
-	//
-	// // Even though our rect command draws the shape with its
-	// // center at the origin, translate moves it to the new
-	// // x and y position
-	// d.Translate(x, d.Height()/2-dim/2)
-	// d.Fill(255)
-	// d.Rect(-dim/2, -dim/2, dim, dim)
-	//
-	// // Transforms accumulate. Notice how this rect moves
-	// // twice as fast as the other, but it has the same
-	// // parameter for the x-axis value
-	// d.Translate(x, dim)
-	// d.Fill(0)
-	// d.Rect(-dim/2, -dim/2, dim, dim)
-
-	d.Translate(100, 100)
-	d.Rect(50, 50, 200, 200)
-	fmt.Println("Drawing!")
+func draw(p *per5.Per5) {
+	cc.Draw(p)
 }
