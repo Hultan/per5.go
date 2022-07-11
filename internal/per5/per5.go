@@ -15,7 +15,6 @@ type Per5 struct {
 	ctx                    *cairo.Context
 	setupFunc, drawFunc    func(*Per5)
 	width, height          float64
-	translateX, translateY float64
 	ticker                 ticker
 	mouseX, mouseY         int
 	strokeMode, fillMode   bool
@@ -41,50 +40,50 @@ func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Per5
 	return d
 }
 
-func (d *Per5) Init() {
+func (p *Per5) Init() {
 	// Events (signals)
-	d.da.Connect("draw", d.onDraw)
-	d.win.AddEvents(int(gdk.POINTER_MOTION_MASK))
-	d.win.Connect("motion-notify-event", d.onMotionNotifyEvent)
+	p.da.Connect("draw", p.onDraw)
+	p.win.AddEvents(int(gdk.POINTER_MOTION_MASK))
+	p.win.Connect("motion-notify-event", p.onMotionNotifyEvent)
 
 	// Fields
-	d.width, d.height = float64(d.da.GetAllocatedWidth()), float64(d.da.GetAllocatedHeight())
+	p.width, p.height = float64(p.da.GetAllocatedWidth()), float64(p.da.GetAllocatedHeight())
 
 	// Ticker
-	d.ticker.ticker = time.NewTicker(20 * time.Millisecond)
-	d.ticker.tickerQuit = make(chan struct{})
+	p.ticker.ticker = time.NewTicker(20 * time.Millisecond)
+	p.ticker.tickerQuit = make(chan struct{})
 
 	// Startup per5.go
-	d.setupFunc(d)
-	go d.mainLoop()
+	p.setupFunc(p)
+	go p.mainLoop()
 }
 
-func (d *Per5) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
-	if d.ctx == nil {
-		d.ctx = ctx
+func (p *Per5) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
+	if p.ctx == nil {
+		p.ctx = ctx
 	}
 
-	d.drawFunc(d)
+	p.drawFunc(p)
 }
 
-func (d *Per5) onMotionNotifyEvent(da *gtk.ApplicationWindow, e *gdk.Event) {
+func (p *Per5) onMotionNotifyEvent(da *gtk.ApplicationWindow, e *gdk.Event) {
 	me := gdk.EventMotionNewFromEvent(e)
 
 	x, y := me.MotionVal()
-	xx, yy, err := d.win.TranslateCoordinates(d.da, int(x), int(y))
+	xx, yy, err := p.win.TranslateCoordinates(p.da, int(x), int(y))
 	if err != nil {
 		panic(err)
 	}
-	d.mouseX, d.mouseY = xx, yy
+	p.mouseX, p.mouseY = xx, yy
 }
 
-func (d *Per5) mainLoop() {
+func (p *Per5) mainLoop() {
 	for {
 		select {
-		case <-d.ticker.ticker.C:
-			d.da.QueueDraw()
-		case <-d.ticker.tickerQuit:
-			d.ticker.ticker.Stop()
+		case <-p.ticker.ticker.C:
+			p.da.QueueDraw()
+		case <-p.ticker.tickerQuit:
+			p.ticker.ticker.Stop()
 			return
 		}
 	}

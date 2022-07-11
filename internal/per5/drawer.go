@@ -6,122 +6,120 @@ import (
 	"math"
 )
 
-func (d *Per5) CreateCanvas(width, height int) {
-	d.da.SetSizeRequest(width, height)
-	d.width, d.height = float64(width), float64(height)
+func (p *Per5) CreateCanvas(width, height int) {
+	p.da.SetSizeRequest(width, height)
+	p.width, p.height = float64(width), float64(height)
 
-	fmt.Println(d.da.GetAllocatedWidth(), "x", d.da.GetAllocatedHeight())
-	fmt.Println(d.Width(), "x", d.Height())
+	fmt.Println(p.da.GetAllocatedWidth(), "x", p.da.GetAllocatedHeight())
+	fmt.Println(p.Width(), "x", p.Height())
 }
 
-func (d *Per5) BackgroundRGBA(col color.Color) {
-	d.setColorRGBA(col)
-	d.drawBackground()
+func (p *Per5) BackgroundRGBA(col color.Color) {
+	p.setColorRGBA(col)
+	p.drawBackground()
 }
 
-func (d *Per5) Background(col uint8) {
-	d.setColor(col)
-	d.drawBackground()
+func (p *Per5) Background(col uint8) {
+	p.setColor(col)
+	p.drawBackground()
 }
 
-func (d *Per5) Translate(dx, dy float64) {
-	d.ctx.Translate(dx, dy)
-	// d.translateX = dx
-	// d.translateY = dy
+func (p *Per5) Translate(dx, dy float64) {
+	p.ctx.Translate(dx, dy)
 }
 
-func (d *Per5) Fill(col uint8) {
-	d.fillColor = color.RGBA{R: col, G: col, B: col, A: 255}
-	d.fillMode = true
+func (p *Per5) Fill(col uint8) {
+	p.fillColor = color.RGBA{R: col, G: col, B: col, A: 255}
+	p.fillMode = true
 }
 
-func (d *Per5) FillRGBA(col color.Color) {
-	d.fillColor = col
-	d.fillMode = true
+func (p *Per5) FillRGBA(col color.Color) {
+	p.fillColor = col
+	p.fillMode = true
 }
 
-func (d *Per5) NoFill() {
-	d.fillMode = false
+func (p *Per5) NoFill() {
+	p.fillMode = false
 }
 
-func (d *Per5) Stroke(col uint8) {
-	d.strokeColor = color.RGBA{R: col, G: col, B: col, A: 255}
-	d.strokeMode = true
+func (p *Per5) Stroke(col uint8) {
+	p.strokeColor = color.RGBA{R: col, G: col, B: col, A: 255}
+	p.strokeMode = true
 }
 
-func (d *Per5) StrokeRGBA(col color.Color) {
-	d.strokeColor = col
-	d.strokeMode = true
+func (p *Per5) StrokeRGBA(col color.Color) {
+	p.strokeColor = col
+	p.strokeMode = true
 }
 
-func (d *Per5) NoStroke() {
-	d.strokeMode = false
+func (p *Per5) NoStroke() {
+	p.strokeMode = false
 }
 
-func (d *Per5) StrokeWeight(w float64) {
-	d.ctx.SetLineWidth(w)
+func (p *Per5) StrokeWeight(w float64) {
+	p.ctx.SetLineWidth(w)
 }
 
-func (d *Per5) Width() float64 {
-	return d.width
+func (p *Per5) Width() float64 {
+	return p.width
 }
 
-func (d *Per5) Height() float64 {
-	return d.height
+func (p *Per5) Height() float64 {
+	return p.height
 }
 
-func (d *Per5) MouseX() int {
-	return d.mouseX
+func (p *Per5) MouseX() int {
+	return p.mouseX
 }
 
-func (d *Per5) MouseY() int {
-	return d.mouseY
+func (p *Per5) MouseY() int {
+	return p.mouseY
 }
 
 //
 // Shapes
 //
 
-func (d *Per5) Point(x, y float64) {
-	d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
-	d.Rect(d.xc(x), d.yc(y), 1, 1)
-	d.ctx.Stroke()
+func (p *Per5) Point(x, y float64) {
+	p.ctx.SetSourceRGBA(p.colorToGTK(p.strokeColor))
+	p.Rect(x, y, 1, 1)
+	p.ctx.Stroke()
 }
 
-func (d *Per5) Line(x1, y1, x2, y2 float64) {
-	d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
-	d.ctx.MoveTo(d.xc(x1), d.yc(y1))
-	d.ctx.LineTo(d.xc(x2), d.yc(y2))
-	d.ctx.Stroke()
+func (p *Per5) Line(x1, y1, x2, y2 float64) {
+	p.ctx.SetSourceRGBA(p.colorToGTK(p.strokeColor))
+	p.ctx.MoveTo(x1, y1)
+	p.ctx.LineTo(x2, y2)
+	p.ctx.Stroke()
 }
 
-func (d *Per5) Square(x, y, s float64) {
-	d.Rect(d.xc(x), d.yc(y), s, s)
+func (p *Per5) Square(x, y, s float64) {
+	p.Rect(x, y, s, s)
 }
 
-func (d *Per5) Rect(x, y, w, h float64) {
-	if d.fillMode {
-		d.ctx.SetSourceRGBA(d.colorToGTK(d.fillColor))
-		d.ctx.Rectangle(d.xc(x), d.yc(y), w, h)
-		d.ctx.Fill()
+func (p *Per5) Rect(x, y, w, h float64) {
+	if p.fillMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.fillColor))
+		p.ctx.Rectangle(x, y, w, h)
+		p.ctx.Fill()
 	}
-	if d.strokeMode {
-		d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
-		d.ctx.Rectangle(d.xc(x), d.yc(y), w, h)
-		d.ctx.Stroke()
+	if p.strokeMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.strokeColor))
+		p.ctx.Rectangle(x, y, w, h)
+		p.ctx.Stroke()
 	}
 }
 
-func (d *Per5) Circle(x, y, diam float64) {
-	if d.fillMode {
-		d.ctx.SetSourceRGBA(d.colorToGTK(d.fillColor))
-		d.ctx.Arc(d.xc(x), d.yc(y), diam/2.0, 0, math.Pi*2)
-		d.ctx.Fill()
+func (p *Per5) Circle(x, y, diam float64) {
+	if p.fillMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.fillColor))
+		p.ctx.Arc(x, y, diam/2.0, 0, math.Pi*2)
+		p.ctx.Fill()
 	}
-	if d.strokeMode {
-		d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
-		d.ctx.Arc(d.xc(x), d.yc(y), diam/2.0, 0, math.Pi*2)
-		d.ctx.Stroke()
+	if p.strokeMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.strokeColor))
+		p.ctx.Arc(x, y, diam/2.0, 0, math.Pi*2)
+		p.ctx.Stroke()
 	}
 }
 
@@ -129,28 +127,20 @@ func (d *Per5) Circle(x, y, diam float64) {
 // Helper functions
 //
 
-func (d *Per5) drawBackground() {
-	d.ctx.Rectangle(0, 0, d.width, d.height)
-	d.ctx.Fill()
+func (p *Per5) drawBackground() {
+	p.ctx.Rectangle(0, 0, p.width, p.height)
+	p.ctx.Fill()
 }
 
-func (d *Per5) setColor(c uint8) {
-	d.ctx.SetSourceRGBA(d.colorToGTK(color.RGBA{R: c, G: c, B: c, A: 255}))
+func (p *Per5) setColor(c uint8) {
+	p.ctx.SetSourceRGBA(p.colorToGTK(color.RGBA{R: c, G: c, B: c, A: 255}))
 }
 
-func (d *Per5) setColorRGBA(c color.Color) {
-	d.ctx.SetSourceRGBA(d.colorToGTK(c))
+func (p *Per5) setColorRGBA(c color.Color) {
+	p.ctx.SetSourceRGBA(p.colorToGTK(c))
 }
 
-func (d *Per5) xc(x float64) float64 {
-	return x + d.translateX
-}
-
-func (d *Per5) yc(y float64) float64 {
-	return y + d.translateY
-}
-
-func (d *Per5) colorToGTK(c color.Color) (float64, float64, float64, float64) {
+func (p *Per5) colorToGTK(c color.Color) (float64, float64, float64, float64) {
 	r, g, b, a := c.RGBA()
 	return float64(r) / 65535, float64(g) / 65535, float64(b) / 65535, float64(a) / 65535
 }
