@@ -137,6 +137,23 @@ func (p *Per5) Circle(x, y, diam float64) {
 	}
 }
 
+func (p *Per5) Triangle(x1, y1, x2, y2, x3, y3 float64) {
+	if p.fillMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.fillColor))
+		p.Line(x1, y1, x2, y2)
+		p.Line(x2, y2, x3, y3)
+		p.Line(x3, y3, x1, y1)
+		p.ctx.Fill()
+	}
+	if p.strokeMode {
+		p.ctx.SetSourceRGBA(p.colorToGTK(p.strokeColor))
+		p.Line(x1, y1, x2, y2)
+		p.Line(x2, y2, x3, y3)
+		p.Line(x3, y3, x1, y1)
+		p.ctx.Stroke()
+	}
+}
+
 //
 // Helper functions
 //

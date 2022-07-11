@@ -59,7 +59,7 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	da.SetSizeRequest(600, 600)
 
 	cc = codingChallenge.NewChallengeManager()
-	cc.SetCurrentChallenge(1)
+	cc.SetCurrentChallenge(0)
 
 	d := per5.NewDrawer(m.Window, da, setup, draw)
 	d.Init()

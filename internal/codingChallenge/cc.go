@@ -21,6 +21,8 @@ func NewChallengeManager() *ChallengeManager {
 func (c *ChallengeManager) SetCurrentChallenge(i int) {
 	c.currentChallengeNumber = i
 	switch c.currentChallengeNumber {
+	case 0:
+		c.currentChallenge = newCC0()
 	case 1:
 		c.currentChallenge = newCC1()
 	}
