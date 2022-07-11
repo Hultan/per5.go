@@ -17,7 +17,34 @@ func (c *CC1) Setup(p *per5.Per5) {
 
 func (c *CC1) Draw(p *per5.Per5) {
 	p.BackgroundRGBA(per5.GREY)
-	p.Rect(50, 50, 100, 100)
+	p.StrokeRGBA(per5.WHITE)
+	p.NoFill()
+
+	// Horizontal lines
+	p.Line(0, 100, p.Width(), 100)
+	p.Line(0, 200, p.Width(), 200)
+	p.Line(0, 300, p.Width(), 300)
+
+	// Vertical lines
+	p.Line(100, 0, 100, p.Height())
+	p.Line(200, 0, 200, p.Height())
+	p.Line(300, 0, 300, p.Height())
+
+	p.StrokeRGBA(per5.RED)
+	p.Rect(100, 100, 100, 100)
+
+	p.StrokeRGBA(per5.BLUE)
+	p.RectMode(per5.RectMode_Corners)
+	p.Rect(100, 100, 150, 150)
+
+	p.StrokeRGBA(per5.BLACK)
+	p.RectMode(per5.RectMode_Center)
+	p.Rect(175, 175, 100, 100)
+
+	p.StrokeRGBA(per5.GREEN)
+	p.RectMode(per5.RectMode_Radius)
+	p.Rect(175, 175, 100, 100)
+
 	// p.Translate(p.Width()/2, p.Height()/2)
 	// p.Stroke(255)
 	//

@@ -1,7 +1,6 @@
 package per5
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 )
@@ -9,9 +8,6 @@ import (
 func (p *Per5) CreateCanvas(width, height int) {
 	p.da.SetSizeRequest(width, height)
 	p.width, p.height = float64(width), float64(height)
-
-	fmt.Println(p.da.GetAllocatedWidth(), "x", p.da.GetAllocatedHeight())
-	fmt.Println(p.Width(), "x", p.Height())
 }
 
 func (p *Per5) BackgroundRGBA(col color.Color) {
@@ -97,7 +93,25 @@ func (p *Per5) Square(x, y, s float64) {
 	p.Rect(x, y, s, s)
 }
 
+func (p *Per5) RectMode(mode RectMode) {
+	p.rectMode = mode
+}
+
 func (p *Per5) Rect(x, y, w, h float64) {
+	switch p.rectMode {
+	case RectMode_Corner:
+	case RectMode_Corners:
+		w -= x
+		h -= y
+	case RectMode_Center:
+		x -= w / 2
+		y -= h / 2
+	case RectMode_Radius:
+		x -= w
+		y -= h
+		w *= 2
+		h *= 2
+	}
 	if p.fillMode {
 		p.ctx.SetSourceRGBA(p.colorToGTK(p.fillColor))
 		p.ctx.Rectangle(x, y, w, h)

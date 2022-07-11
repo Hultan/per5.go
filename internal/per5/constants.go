@@ -17,3 +17,12 @@ var YELLOW = color.RGBA{R: 255, G: 255, B: 0, A: 255}
 var INDIGO = color.RGBA{R: 75, G: 0, B: 130, A: 255}
 var VIOLET = color.RGBA{R: 238, G: 130, B: 238, A: 255}
 var BROWN = color.RGBA{R: 118, G: 57, B: 49, A: 255}
+
+type RectMode int
+
+const (
+	RectMode_Corner RectMode = iota
+	RectMode_Corners
+	RectMode_Radius
+	RectMode_Center
+)

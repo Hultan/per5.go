@@ -19,6 +19,7 @@ type Per5 struct {
 	mouseX, mouseY         int
 	strokeMode, fillMode   bool
 	strokeColor, fillColor color.Color
+	rectMode               RectMode
 }
 
 type ticker struct {
@@ -28,16 +29,21 @@ type ticker struct {
 
 func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Per5), draw func(*Per5)) *Per5 {
 	d := &Per5{
-		win:         win,
-		da:          da,
-		setupFunc:   setup,
-		drawFunc:    draw,
-		strokeMode:  true,
-		fillMode:    true,
-		strokeColor: BLACK,
-		fillColor:   WHITE,
+		win:       win,
+		da:        da,
+		setupFunc: setup,
+		drawFunc:  draw,
 	}
+	d.resetDrawer()
 	return d
+}
+
+func (p *Per5) resetDrawer() {
+	p.strokeMode = true
+	p.fillMode = true
+	p.strokeColor = BLACK
+	p.fillColor = WHITE
+	p.rectMode = RectMode_Corner
 }
 
 func (p *Per5) Init() {
@@ -58,15 +64,16 @@ func (p *Per5) Init() {
 	go p.mainLoop()
 }
 
-func (p *Per5) onDraw(da *gtk.DrawingArea, ctx *cairo.Context) {
+func (p *Per5) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 	if p.ctx == nil {
 		p.ctx = ctx
 	}
 
+	p.resetDrawer()
 	p.drawFunc(p)
 }
 
-func (p *Per5) onMotionNotifyEvent(da *gtk.ApplicationWindow, e *gdk.Event) {
+func (p *Per5) onMotionNotifyEvent(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	me := gdk.EventMotionNewFromEvent(e)
 
 	x, y := me.MotionVal()
