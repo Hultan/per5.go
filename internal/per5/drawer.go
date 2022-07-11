@@ -31,23 +31,31 @@ func (d *Per5) Translate(dx, dy float64) {
 }
 
 func (d *Per5) Fill(col uint8) {
-	d.setColor(col)
-	d.mode = drawModeFill
+	d.fillColor = color.RGBA{R: col, G: col, B: col, A: 255}
+	d.fillMode = true
 }
 
 func (d *Per5) FillRGBA(col color.Color) {
-	d.setColorRGBA(col)
-	d.mode = drawModeFill
+	d.fillColor = col
+	d.fillMode = true
+}
+
+func (d *Per5) NoFill() {
+	d.fillMode = false
 }
 
 func (d *Per5) Stroke(col uint8) {
-	d.setColor(col)
-	d.mode = drawModeStroke
+	d.strokeColor = color.RGBA{R: col, G: col, B: col, A: 255}
+	d.strokeMode = true
 }
 
 func (d *Per5) StrokeRGBA(col color.Color) {
-	d.setColorRGBA(col)
-	d.mode = drawModeStroke
+	d.strokeColor = col
+	d.strokeMode = true
+}
+
+func (d *Per5) NoStroke() {
+	d.strokeMode = false
 }
 
 func (d *Per5) StrokeWeight(w float64) {
@@ -75,29 +83,46 @@ func (d *Per5) MouseY() int {
 //
 
 func (d *Per5) Point(x, y float64) {
+	d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
 	d.Rect(d.xc(x), d.yc(y), 1, 1)
-	d.draw()
+	d.ctx.Stroke()
 }
 
 func (d *Per5) Line(x1, y1, x2, y2 float64) {
+	d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
 	d.ctx.MoveTo(d.xc(x1), d.yc(y1))
 	d.ctx.LineTo(d.xc(x2), d.yc(y2))
-	d.draw()
+	d.ctx.Stroke()
 }
 
 func (d *Per5) Square(x, y, s float64) {
-	d.ctx.Rectangle(d.xc(x), d.yc(y), s, s)
-	d.draw()
+	d.Rect(d.xc(x), d.yc(y), s, s)
 }
 
 func (d *Per5) Rect(x, y, w, h float64) {
-	d.ctx.Rectangle(d.xc(x), d.yc(y), w, h)
-	d.draw()
+	if d.fillMode {
+		d.ctx.SetSourceRGBA(d.colorToGTK(d.fillColor))
+		d.ctx.Rectangle(d.xc(x), d.yc(y), w, h)
+		d.ctx.Fill()
+	}
+	if d.strokeMode {
+		d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
+		d.ctx.Rectangle(d.xc(x), d.yc(y), w, h)
+		d.ctx.Stroke()
+	}
 }
 
 func (d *Per5) Circle(x, y, diam float64) {
-	d.ctx.Arc(d.xc(x), d.yc(y), diam/2.0, 0, math.Pi*2)
-	d.draw()
+	if d.fillMode {
+		d.ctx.SetSourceRGBA(d.colorToGTK(d.fillColor))
+		d.ctx.Arc(d.xc(x), d.yc(y), diam/2.0, 0, math.Pi*2)
+		d.ctx.Fill()
+	}
+	if d.strokeMode {
+		d.ctx.SetSourceRGBA(d.colorToGTK(d.strokeColor))
+		d.ctx.Arc(d.xc(x), d.yc(y), diam/2.0, 0, math.Pi*2)
+		d.ctx.Stroke()
+	}
 }
 
 //
@@ -107,15 +132,6 @@ func (d *Per5) Circle(x, y, diam float64) {
 func (d *Per5) drawBackground() {
 	d.ctx.Rectangle(0, 0, d.width, d.height)
 	d.ctx.Fill()
-}
-
-func (d *Per5) draw() {
-	switch d.mode {
-	case drawModeFill:
-		d.ctx.Fill()
-	case drawModeStroke:
-		d.ctx.Stroke()
-	}
 }
 
 func (d *Per5) setColor(c uint8) {

@@ -1,6 +1,7 @@
 package per5
 
 import (
+	"image/color"
 	"time"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -12,13 +13,13 @@ type Per5 struct {
 	win                    *gtk.ApplicationWindow
 	da                     *gtk.DrawingArea
 	ctx                    *cairo.Context
-	setupFunc              func(*Per5)
-	drawFunc               func(*Per5)
+	setupFunc, drawFunc    func(*Per5)
 	width, height          float64
-	mode                   drawMode
 	translateX, translateY float64
 	ticker                 ticker
 	mouseX, mouseY         int
+	strokeMode, fillMode   bool
+	strokeColor, fillColor color.Color
 }
 
 type ticker struct {
@@ -28,10 +29,14 @@ type ticker struct {
 
 func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Per5), draw func(*Per5)) *Per5 {
 	d := &Per5{
-		win:       win,
-		da:        da,
-		setupFunc: setup,
-		drawFunc:  draw,
+		win:         win,
+		da:          da,
+		setupFunc:   setup,
+		drawFunc:    draw,
+		strokeMode:  true,
+		fillMode:    true,
+		strokeColor: BLACK,
+		fillColor:   WHITE,
 	}
 	return d
 }

@@ -16,7 +16,8 @@ func (c *CC1) Setup(p *per5.Per5) {
 }
 
 func (c *CC1) Draw(p *per5.Per5) {
-	p.BackgroundRGBA(per5.BLACK)
+	p.BackgroundRGBA(per5.GREY)
+	p.Rect(50, 50, 100, 100)
 	// p.Translate(p.Width()/2, p.Height()/2)
 	// p.Stroke(255)
 	//
