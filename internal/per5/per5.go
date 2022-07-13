@@ -2,6 +2,7 @@ package per5
 
 import (
 	"image/color"
+	"math/rand"
 	"time"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -16,7 +17,7 @@ type Per5 struct {
 	setupFunc, drawFunc    func(*Per5)
 	width, height          float64
 	ticker                 ticker
-	mouseX, mouseY         int
+	mouseX, mouseY         float64
 	strokeMode, fillMode   bool
 	strokeColor, fillColor color.Color
 	rectMode               RectMode
@@ -35,6 +36,7 @@ func NewDrawer(win *gtk.ApplicationWindow, da *gtk.DrawingArea, setup func(*Per5
 		drawFunc:  draw,
 	}
 	d.resetDrawer()
+	rand.Seed(time.Now().UnixNano())
 	return d
 }
 
@@ -81,7 +83,7 @@ func (p *Per5) onMotionNotifyEvent(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	if err != nil {
 		panic(err)
 	}
-	p.mouseX, p.mouseY = xx, yy
+	p.mouseX, p.mouseY = float64(xx), float64(yy)
 }
 
 func (p *Per5) mainLoop() {
