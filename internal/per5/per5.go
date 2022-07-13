@@ -1,7 +1,6 @@
 package per5
 
 import (
-	"fmt"
 	"image/color"
 	"math/rand"
 	"time"
@@ -72,7 +71,6 @@ func (p *Per5) Init() {
 	// Ticker
 	dur := time.Duration(1000.0 / p.frameRate)
 	p.ticker.ticker = time.NewTicker(dur * time.Millisecond)
-	fmt.Println(dur)
 	p.ticker.tickerQuit = make(chan struct{})
 
 	// Startup per5.go

@@ -20,11 +20,21 @@ func NewChallengeManager() *ChallengeManager {
 
 func (c *ChallengeManager) SetCurrentChallenge(i int) {
 	c.currentChallengeNumber = i
+
+	// name := fmt.Sprintf("newCC%d", i)
+	// t := reflect.Zero()
+	// result := reflect.ValueOf(nil).MethodByName(name).Call([]reflect.Value{})[0]
+	// challenge, ok := result.Interface().(Challenge)
+	// if ok {
+	// 	c.currentChallenge = challenge
+	// }
 	switch c.currentChallengeNumber {
 	case 0:
 		c.currentChallenge = newCC0()
 	case 1:
 		c.currentChallenge = newCC1()
+	case 2:
+		c.currentChallenge = newCC2()
 	}
 }
 
