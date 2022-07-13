@@ -61,7 +61,7 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	cc = codingChallenge.NewChallengeManager()
 	cc.SetCurrentChallenge(1)
 
-	d := per5.NewDrawer(m.Window, da, setup, draw)
+	d := per5.NewPer5(m.Window, da, setup, draw)
 	d.Init()
 }
 

@@ -1,6 +1,8 @@
 package codingChallenge
 
 import (
+	"fmt"
+
 	"github.com/hultan/per5/internal/per5"
 )
 
@@ -13,7 +15,7 @@ func newCC1() *CC1 {
 
 func (c *CC1) Setup(p *per5.Per5) {
 	p.CreateCanvas(800, 800)
-
+	p.FrameRate(10)
 	for i := 0; i < 800; i++ {
 		stars = append(stars, newStar(p))
 	}
@@ -28,6 +30,8 @@ func (c *CC1) Draw(p *per5.Per5) {
 		s.update(p)
 		s.draw(p)
 	}
+
+	fmt.Println("Frames :", p.FrameCount())
 }
 
 var stars []*star

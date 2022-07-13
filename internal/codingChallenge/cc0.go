@@ -34,15 +34,15 @@ func (c *CC0) Draw(p *per5.Per5) {
 	p.Rect(100, 100, 100, 100)
 
 	p.StrokeRGBA(per5.BLUE)
-	p.RectMode(per5.RectMode_Corners)
+	p.RectMode(per5.RectModeCorners)
 	p.Rect(100, 100, 150, 150)
 
 	p.StrokeRGBA(per5.BLACK)
-	p.RectMode(per5.RectMode_Center)
+	p.RectMode(per5.RectModeCenter)
 	p.Rect(175, 175, 100, 100)
 
 	p.StrokeRGBA(per5.GREEN)
-	p.RectMode(per5.RectMode_Radius)
+	p.RectMode(per5.RectModeRadius)
 	p.Rect(175, 175, 100, 100)
 
 	p.Triangle(50, 50, 150, 50, 300, 100)

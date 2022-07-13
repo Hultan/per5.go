@@ -21,8 +21,8 @@ var BROWN = color.RGBA{R: 118, G: 57, B: 49, A: 255}
 type RectMode int
 
 const (
-	RectMode_Corner RectMode = iota
-	RectMode_Corners
-	RectMode_Radius
-	RectMode_Center
+	RectModeCorner RectMode = iota
+	RectModeCorners
+	RectModeRadius
+	RectModeCenter
 )
