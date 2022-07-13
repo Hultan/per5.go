@@ -35,6 +35,8 @@ func (c *ChallengeManager) SetCurrentChallenge(i int) {
 		c.currentChallenge = newCC1()
 	case 2:
 		c.currentChallenge = newCC2()
+	case 3:
+		c.currentChallenge = newCC3()
 	}
 }
 
