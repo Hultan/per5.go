@@ -1,6 +1,7 @@
 package draw_ui
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 
@@ -8,7 +9,6 @@ import (
 
 	"github.com/hultan/per5/internal/codingChallenge"
 	"github.com/hultan/per5/internal/per5"
-	"github.com/hultan/softteam/framework"
 )
 
 const applicationTitle = "per5.go"
@@ -17,9 +17,12 @@ const applicationCopyRight = "©SoftTeam AB, 2020"
 
 var cc *codingChallenge.ChallengeManager
 
+//go:embed assets/main.glade
+var mainGlade string
+
 type MainForm struct {
 	Window  *gtk.ApplicationWindow
-	builder *framework.GtkBuilder
+	builder *gtkBuilder
 }
 
 // NewMainForm : Creates a new MainForm object
@@ -34,15 +37,15 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	gtk.Init(&os.Args)
 
 	// Create a new softBuilder
-	fw := framework.NewFramework()
-	builder, err := fw.Gtk.CreateBuilder("main.glade")
+
+	builder, err := newBuilder(mainGlade)
 	if err != nil {
 		panic(err)
 	}
 	m.builder = builder
 
 	// Get the main window from the glade file
-	m.Window = m.builder.GetObject("main_window").(*gtk.ApplicationWindow)
+	m.Window = m.builder.getObject("main_window").(*gtk.ApplicationWindow)
 
 	// Set up main window
 	m.Window.SetApplication(app)
@@ -55,11 +58,11 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	// Show the main window
 	m.Window.ShowAll()
 
-	da := m.builder.GetObject("drawingArea").(*gtk.DrawingArea)
+	da := m.builder.getObject("drawingArea").(*gtk.DrawingArea)
 	da.SetSizeRequest(600, 600)
 
 	cc = codingChallenge.NewChallengeManager()
-	cc.SetCurrentChallenge(3)
+	cc.SetCurrentChallenge(2)
 
 	d := per5.NewPer5(m.Window, da, setup, draw)
 	d.Init()

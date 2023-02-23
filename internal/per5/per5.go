@@ -19,6 +19,7 @@ type Per5 struct {
 	rectMode               RectMode
 	frameRate              float64
 	frameCount             int
+	keyCode                uint
 }
 
 type core struct {
@@ -26,6 +27,7 @@ type core struct {
 	da                  *gtk.DrawingArea
 	ctx                 *cairo.Context
 	setupFunc, drawFunc func(*Per5)
+	keyPressedFunc      func(*Per5)
 	width, height       float64
 }
 
@@ -61,6 +63,8 @@ func (p *Per5) Init() {
 	p.da.Connect("draw", p.onDraw)
 	p.win.AddEvents(int(gdk.POINTER_MOTION_MASK))
 	p.win.Connect("motion-notify-event", p.onMotionNotifyEvent)
+	p.win.Connect("key-press-event", p.onKeyDown)
+	p.win.Connect("key-release-event", p.onKeyUp)
 
 	// Fields
 	p.width, p.height = float64(p.da.GetAllocatedWidth()), float64(p.da.GetAllocatedHeight())
@@ -98,6 +102,19 @@ func (p *Per5) onMotionNotifyEvent(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		panic(err)
 	}
 	p.mouseX, p.mouseY = float64(xx), float64(yy)
+}
+
+func (p *Per5) onKeyDown(_ *gtk.ApplicationWindow, e *gdk.Event) {
+	if p.keyPressedFunc == nil {
+		return
+	}
+
+	ke := gdk.EventKeyNewFromEvent(e)
+	p.keyCode = ke.KeyVal()
+	p.keyPressedFunc(p)
+}
+
+func (p *Per5) onKeyUp(_ *gtk.ApplicationWindow, e *gdk.Event) {
 }
 
 func (p *Per5) mainLoop() {

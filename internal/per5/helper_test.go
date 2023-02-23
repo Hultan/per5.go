@@ -50,15 +50,15 @@ func TestPer5_Constraint(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"Constraint(5,0,10) == 5", args{5, 0, 10}, 5},
-		{"Constraint(-5,0,10) == 0", args{-5, 0, 10}, 0},
-		{"Constraint(15,0,10) == 10", args{15, 0, 10}, 10},
+		{"Constrain(5,0,10) == 5", args{5, 0, 10}, 5},
+		{"Constrain(-5,0,10) == 0", args{-5, 0, 10}, 0},
+		{"Constrain(15,0,10) == 10", args{15, 0, 10}, 10},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Per5{}
-			if got := p.Constraint(tt.args.v, tt.args.min, tt.args.max); got != tt.want {
-				t.Errorf("Constraint() = %v, want %v", got, tt.want)
+			if got := p.Constrain(tt.args.v, tt.args.min, tt.args.max); got != tt.want {
+				t.Errorf("Constrain() = %v, want %v", got, tt.want)
 			}
 		})
 	}
